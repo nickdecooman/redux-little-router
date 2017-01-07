@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { routerReducer } from '../src';
-import { LOCATION_CHANGED } from '../src/action-types';
+import reducer from '../src/reducer';
+import { LOCATION_CHANGED } from '../src/types';
 
 describe('Router reducer', () => {
   it('adds the pathname to the store', () => {
@@ -9,26 +9,41 @@ describe('Router reducer', () => {
       payload: {
         params: {},
         result: 'rofl',
-        url: '/rofl',
         pathname: '/rofl',
-        action: 'PUSH',
         state: {
           bork: 'bork'
         }
       }
     };
-    const result = routerReducer({}, action);
+    const result = reducer()({}, action);
 
     expect(result).to.deep.equal({
       params: {},
       result: 'rofl',
-      url: '/rofl',
       pathname: '/rofl',
-      action: 'PUSH',
       state: {
         bork: 'bork'
       },
       previous: {}
+    });
+  });
+
+  it('includes the previous location', () => {
+    const action = {
+      type: LOCATION_CHANGED,
+      payload: {
+        pathname: '/rofl'
+      }
+    };
+    const result = reducer()({
+      pathname: '/waffle'
+    }, action);
+
+    expect(result).to.deep.equal({
+      pathname: '/rofl',
+      previous: {
+        pathname: '/waffle'
+      }
     });
   });
 
@@ -38,16 +53,14 @@ describe('Router reducer', () => {
       payload: {
         params: {},
         result: 'rofl',
-        url: '/rofl',
         pathname: '/rofl',
-        action: 'PUSH',
         state: {
           bork: 'bork'
         }
       }
     };
 
-    const result = routerReducer({
+    const result = reducer()({
       basename: '/base'
     }, action);
 
@@ -55,14 +68,92 @@ describe('Router reducer', () => {
       basename: '/base',
       params: {},
       result: 'rofl',
-      url: '/rofl',
       pathname: '/rofl',
-      action: 'PUSH',
       state: {
         bork: 'bork'
       },
       previous: {
         basename: '/base'
+      }
+    });
+  });
+
+  it('persists the previous query string if requested', () => {
+    const action = {
+      type: LOCATION_CHANGED,
+      payload: {
+        pathname: '/rofl',
+        options: {
+          persistQuery: true
+        }
+      }
+    };
+
+    const result = reducer()({
+      pathname: '/waffle',
+      query: {
+        please: 'clap'
+      },
+      search: '?please=clap'
+    }, action);
+
+    expect(result).to.deep.equal({
+      pathname: '/rofl',
+      query: {
+        please: 'clap'
+      },
+      search: '?please=clap',
+      options: {
+        persistQuery: true
+      },
+      previous: {
+        pathname: '/waffle',
+        query: {
+          please: 'clap'
+        },
+        search: '?please=clap'
+      }
+    });
+  });
+
+  it('allows new queries to override persistQuery', () => {
+    const action = {
+      type: LOCATION_CHANGED,
+      payload: {
+        pathname: '/rofl',
+        query: {
+          clap: 'please'
+        },
+        search: '?clap=please',
+        options: {
+          persistQuery: true
+        }
+      }
+    };
+
+    const result = reducer()({
+      pathname: '/waffle',
+      query: {
+        please: 'clap'
+      },
+      search: '?please=clap'
+    }, action);
+
+    expect(result).to.deep.equal({
+      pathname: '/rofl',
+      query: {
+        clap: 'please'
+      },
+      search: '?clap=please',
+      options: {
+        persistQuery: true
+      },
+      previous: {
+        pathname: '/waffle',
+        query: {
+          please: 'clap'
+        },
+        search: '?please=clap'
       }
     });
   });
@@ -75,7 +166,7 @@ describe('Router reducer', () => {
         other: 'stuff'
       }
     };
-    const result = routerReducer({
+    const result = reducer()({
       pathname: '/rofl',
       other: 'things'
     }, action);
@@ -93,7 +184,7 @@ describe('Router reducer', () => {
         crazy: 'nonsense'
       }
     };
-    const result = routerReducer({}, action);
+    const result = reducer()({}, action);
     expect(result).to.deep.equal({});
   });
 
@@ -104,7 +195,32 @@ describe('Router reducer', () => {
         crazy: 'nonsense'
       }
     };
-    const result = routerReducer(undefined, action);
-    expect(result).to.deep.equal({});
+    const result = reducer()(undefined, action);
+    expect(result).to.be.undefined;
+  });
+
+  it('uses given location as initial state when no initial router state provided', () => {
+    const action = {
+      type: 'NOT_MY_ACTION_NOT_MY_PROBLEM',
+      payload: {
+        crazy: 'nonsense'
+      }
+    };
+
+    const result = reducer({
+      pathname: '/lol',
+      search: '?as=af',
+      query: {
+        as: 'af'
+      }
+    })(undefined, action);
+
+    expect(result).to.deep.equal({
+      pathname: '/lol',
+      search: '?as=af',
+      query: {
+        as: 'af'
+      }
+    });
   });
 });

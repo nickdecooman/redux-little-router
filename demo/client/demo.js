@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import React, { PropTypes } from 'react';
 import chunk from 'lodash.chunk';
-import { Link, RelativeFragment as Fragment } from '../../src';
+import { Link, Fragment } from '../../src';
 import styles from './demo.css';
 
 const COLUMN_COUNT = 2;
@@ -50,9 +50,9 @@ const Demo = ({ router }) => {
         </h1>
 
         <div className={styles.nav}>
-          <Link href='/cheese'>Cheese</Link>
+          <Link href={{ pathname: '/cheese', query: { is: 'cheese' } }}>Cheese</Link>
           <Link href='/dog'>Dog</Link>
-          <Link href='/cat'>Cat</Link>
+          <Link href='/cat?is=cat'>Cat</Link>
           <Link href='/hipster'>Hipster</Link>
         </div>
 
