@@ -10,7 +10,8 @@ type RelativeProps = {
   matchRoute: Function,
   forRoute?: string,
   withConditions?: (location: Location) => bool,
-  children: React.Element<*>
+  children: React.Element<*>,
+  className: any
 };
 
 type AbsoluteProps = RelativeProps & {
@@ -115,7 +116,8 @@ const Fragment = (props: Props) => {
     forRoute,
     withConditions,
     children,
-    parentId
+    parentId,
+    className
   } = props;
 
   const matchResult = matchRoute(location.pathname, forRoute);
@@ -147,7 +149,7 @@ const Fragment = (props: Props) => {
     }
   }
 
-  return <div>{children}</div>;
+  return <div className={className}>{children}</div>;
 };
 
 export const AbsoluteFragment = absolute(Fragment);
