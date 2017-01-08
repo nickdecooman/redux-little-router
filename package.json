@@ -1,6 +1,6 @@
 {
   "name": "@nickdecooman/redux-little-router",
-  "version": "12.1.4",
+  "version": "12.1.5",
   "description": "A barebones routing solution for Redux applications.",
   "main": "lib/index.js",
   "scripts": {
