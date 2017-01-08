@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define(["react"], factory);
 	else if(typeof exports === 'object')
-		exports["ReduxLittleRouter"] = factory(require("react"));
+		exports["@nickdecooman/reduxLittleRouter"] = factory(require("react"));
 	else
-		root["ReduxLittleRouter"] = factory(root["React"]);
+		root["@nickdecooman/reduxLittleRouter"] = factory(root["React"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_34__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -5548,6 +5548,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    } else {
 	      _matchCache2.default.add(parentId, forRoute);
 	    }
+	  }
+	
+	  if (_react2.default.Children.count(children) === 1) {
+	    _react2.default.Children.only(children);
 	  }
 	
 	  return _react2.default.createElement(
