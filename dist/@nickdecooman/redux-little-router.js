@@ -5551,7 +5551,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  if (_react2.default.Children.count(children) === 1) {
-	    _react2.default.Children.only(children);
+	    return _react2.default.Children.only(children);
 	  }
 	
 	  return _react2.default.createElement(
