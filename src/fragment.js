@@ -150,7 +150,7 @@ const Fragment = (props: Props) => {
   }
 
   if (React.Children.count(children) === 1) {
-    React.Children.only(children);
+    return React.Children.only(children);
   }
 
   return <div className={className}>{children}</div>;
