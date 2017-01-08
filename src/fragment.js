@@ -11,7 +11,7 @@ type RelativeProps = {
   forRoute?: string,
   withConditions?: (location: Location) => bool,
   children: React.Element<*>,
-  className: any
+  className: string
 };
 
 type AbsoluteProps = RelativeProps & {
@@ -147,6 +147,10 @@ const Fragment = (props: Props) => {
     } else {
       matchCache.add(parentId, forRoute);
     }
+  }
+
+  if (React.Children.count(children) === 1) {
+    React.Children.only(children);
   }
 
   return <div className={className}>{children}</div>;
